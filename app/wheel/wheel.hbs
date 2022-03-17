@@ -1,0 +1,27 @@
+<svg id="canvas" height={{height}} width={{width}}>
+  <g transform={{transform}}>
+    {{#each svg.circles}}
+      <circle
+        r={{this.r}}
+        fill={{this.style.fill}}
+        stroke={{this.style.stroke}}
+      ></circle>
+    {{/each}}
+    {{#each svg.lines}}
+      <line
+        x1={{this.x1}}
+        y1={{this.y1}}
+        x2={{this.x2}}
+        y2={{this.y2}}
+        stroke={{this.style.stroke}}
+      ></line>
+    {{/each}}
+    <polygon
+      points={{polygon.points}}
+      fill={{polygon.style.fill}}
+      stroke={{polygon.style.stroke}}
+      fill_opacity={{polygon.style.fill_opacity}}
+      cursor={{polygon.style.cursor}}
+    ></polygon>
+  </g>
+</svg>

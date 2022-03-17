@@ -1,0 +1,16 @@
+<table class="roster-table">
+  <thead>
+    <tr>
+      <th>{{header.calendar}}</th>
+      <th>{{header.person}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each items}}
+      <tr>
+        <td>{{this.calendar}}</td>
+        <td>{{this.person}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

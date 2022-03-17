@@ -1,0 +1,17 @@
+{
+  "name": "karen",
+  "version": "1.0.0",
+  "description": "I want to see the manager! Who hasn't done their chores?!",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Zeb Barry",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "express-handlebars": "^6.0.3"
+  }
+}

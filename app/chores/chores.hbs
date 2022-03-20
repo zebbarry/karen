@@ -8,9 +8,12 @@
   <tbody>
     {{#each roster.items}}
       <tr>
-        <td>{{this.calendar}}</td>
+        <td>{{this.chore}}</td>
         <td>{{this.person}}</td>
       </tr>
     {{/each}}
   </tbody>
 </table>
+<form action="{{rotate_url}}">
+  <button type="submit">Rotate</button>
+</form>

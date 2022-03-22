@@ -55,7 +55,6 @@ app.get("/chores", (request, response) => {
 
 app.get("/rotate", (request, response) => {
   rotateRoster();
-  console.log(request);
   response.redirect("/");
 });
 

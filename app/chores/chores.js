@@ -1,9 +1,9 @@
 const chores = [
-  { chore: "Bins", person: "Zeb" },
+  { chore: "Bins", person: "Komal" },
   { chore: "Vacuum", person: "Emma" },
-  { chore: "Kitchen", person: "Komal" },
+  { chore: "Kitchen", person: "Morgan" },
+  { chore: "Lounge", person: "Zeb" },
   { chore: "Mop", person: "Reece" },
-  { chore: "Lounge", person: "Morgan" },
 ];
 
 const getChoreRoster = (people) => {

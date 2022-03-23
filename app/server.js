@@ -10,7 +10,13 @@ const __dirname = path.dirname(__filename);
 console.log(__dirname);
 
 const app = express();
-const port = 8080;
+const port = 18081;
+
+const wheel_params = {
+  segments: 5,
+  circles: 2,
+};
+
 const hbs = create({
   defaultLayout: "main",
   extname: ".hbs",
@@ -18,12 +24,15 @@ const hbs = create({
   partialsDir: ["roster", "wheel", "chores", "."].map((view) =>
     path.join(__dirname, view)
   ),
+  helpers: {
+    ifeq: function(a, b, opts) {
+      if(a === b) // Or === depending on your needs
+          return opts.fn(this);
+      else
+          return opts.inverse(this);
+    }
+  }
 });
-
-const wheel_params = {
-  segments: 5,
-  circles: 2,
-};
 
 app.engine(".hbs", hbs.engine);
 
@@ -34,11 +43,13 @@ app.set(
 );
 
 app.get("/", (request, response) => {
-  hbs.handlebars;
   response.render("base", {
     roster: getRoster(),
     chores: getChoreRoster(),
-    rotate_url: "/rotate",
+    rotate: {
+      url: "/rotate",
+      disabled: false,
+    }
   });
 });
 

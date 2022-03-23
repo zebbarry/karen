@@ -1,4 +1,4 @@
-<table class="roster-table">
+<table class="table table-hover table-striped">
   <thead>
     <tr>
       <th>{{roster.type}}</th>
@@ -7,7 +7,7 @@
   </thead>
   <tbody>
     {{#each roster.items}}
-      <tr>
+      <tr {{#if this.current}}class="table-info"{{/if}}>
         <td>{{this.calendar}}</td>
         <td>{{this.person}}</td>
       </tr>

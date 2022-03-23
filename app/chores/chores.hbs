@@ -1,4 +1,4 @@
-<table class="roster-table">
+<table class="table table-hover table-striped">
   <thead>
     <tr>
       <th>{{chores.type}}</th>
@@ -14,6 +14,6 @@
     {{/each}}
   </tbody>
 </table>
-<form action="{{rotate_url}}">
-  <button type="submit">Rotate</button>
+<form action="{{rotate.url}}">
+  <button type="submit" class="btn btn-primary" {{#if rotate.disabled}}disabled="disabled"{{/if}}>Rotate</button>
 </form>

@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 console.log(__dirname);
 
 const app = express();
-const port = 18081;
+const port = 8080;
 
 const wheel_params = {
   segments: 5,

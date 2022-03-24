@@ -7,12 +7,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "build": "docker build . -t zebbarry/karen"
+    "build": "docker build -t zebbarry/karen:arm-latest .",
+    "run": "docker run -p 18080:8080 zebbarry/karen:arm-latest"
   },
   "author": "Zeb Barry",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.2",
     "express": "^4.17.3",
-    "express-handlebars": "^6.0.3"
+    "express-handlebars": "^6.0.3",
+    "morgan": "^1.10.0"
   }
 }

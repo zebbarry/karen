@@ -1,4 +1,4 @@
-<table class="table table-hover table-striped">
+<table class="table table-hover table-striped" id="chore-table">
   <thead>
     <tr>
       <th>{{chores.type}}</th>
@@ -7,13 +7,30 @@
   </thead>
   <tbody>
     {{#each chores.items}}
-      <tr>
-        <td>{{this.chore}}</td>
-        <td>{{this.person}}</td>
+      <tr class="chore-pair">
+        <td class="chore">{{this.chore}}</td>
+        <td class="person">{{this.person}}</td>
+        <td class="modify-chore" hidden><button class="up">Up</button><button
+            class="down"
+          >Down</button></td>
       </tr>
     {{/each}}
   </tbody>
 </table>
-<form action="{{rotate.url}}">
-  <button type="submit" class="btn btn-primary" {{#if rotate.disabled}}disabled="disabled"{{/if}}>Rotate</button>
-</form>
+{{#if edit.enabled}}
+  <form>
+    <button id="edit" type="button" class="btn btn-primary">Edit</button>
+    <button
+      id="save"
+      type="submit"
+      class="btn btn-success"
+      disabled
+    >Save</button>
+  </form>
+{{/if}}
+{{#if rotate.enabled}}
+  <form action={{rotate.url}}>
+    <button id="rotate" type="submit" class="btn btn-primary">Rotate</button>
+  </form>
+{{/if}}
+<script defer src="/chores/index.js"></script>

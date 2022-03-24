@@ -6,7 +6,7 @@ const chores = [
   { chore: "Mop", person: "Reece" },
 ];
 
-const getChoreRoster = (people) => {
+const getRoster = () => {
   return {
     type: "Chore",
     items: chores,
@@ -25,4 +25,13 @@ const rotateRoster = () => {
   console.log(chores);
 };
 
-export { getChoreRoster, rotateRoster };
+const updateRoster = (new_chores) => {
+  chores.length = 0;
+  for (const chore in new_chores) {
+    chores.push({ chore: chore, person: new_chores[chore] });
+  }
+  console.log(chores);
+  return chores;
+};
+
+export default { getRoster, rotateRoster, updateRoster };

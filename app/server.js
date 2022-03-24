@@ -1,9 +1,12 @@
 import express from "express";
-import { engine, create } from "express-handlebars";
+import bodyParser from "body-parser";
+import { create } from "express-handlebars";
 import path from "path";
-import { getRoster } from "./roster/roster.js";
-import { getChoreRoster, rotateRoster } from "./chores/chores.js";
-import { createWheel } from "./wheel/wheel.js";
+import fs from "fs";
+import morgan from "morgan";
+import roster from "./roster/roster.js";
+import chores from "./chores/chores.js";
+import wheel from "./wheel/wheel.js";
 
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
@@ -17,6 +20,28 @@ const wheel_params = {
   circles: 2,
 };
 
+// log only 4xx and 5xx responses to console
+app.use(
+  morgan("dev", {
+    skip: function (req, res) {
+      return res.statusCode < 400;
+    },
+  })
+);
+
+// log all requests to access.log
+app.use(
+  morgan("common", {
+    stream: fs.createWriteStream(path.join(__dirname, "access.log"), {
+      flags: "a",
+    }),
+  })
+);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname));
+
 const hbs = create({
   defaultLayout: "main",
   extname: ".hbs",
@@ -25,13 +50,13 @@ const hbs = create({
     path.join(__dirname, view)
   ),
   helpers: {
-    ifeq: function(a, b, opts) {
-      if(a === b) // Or === depending on your needs
-          return opts.fn(this);
-      else
-          return opts.inverse(this);
-    }
-  }
+    ifeq: function (a, b, opts) {
+      if (a === b)
+        // Or === depending on your needs
+        return opts.fn(this);
+      else return opts.inverse(this);
+    },
+  },
 });
 
 app.engine(".hbs", hbs.engine);
@@ -44,35 +69,60 @@ app.set(
 
 app.get("/", (request, response) => {
   response.render("base", {
-    roster: getRoster(),
-    chores: getChoreRoster(),
+    roster: roster.getRoster(),
+    chores: chores.getRoster(),
+    edit: {
+      enabled: true,
+    },
     rotate: {
       url: "/rotate",
-      disabled: false,
-    }
+      enabled: false,
+    },
   });
 });
 
 app.get("/roster", (request, response) => {
-  response.render("roster", { roster: getRoster() });
+  response.json(roster.getRoster());
 });
 
 app.get("/chores", (request, response) => {
-  response.render("chores", {
-    roster: getChoreRoster(),
-    rotate_url: "/rotate",
-  });
+  response.json(chores.getRoster());
+});
+
+app.put("/update-chores", (request, response) => {
+  console.log(`Received chores update from ${request.hostname}`);
+  //Check if all fields are provided and are valid:
+  let req_valid = true;
+  for (const element in request.body) {
+    if (
+      !element.toString().match(/^[A-Za-z ]+$/g) ||
+      !request.body[element].toString().match(/^[A-Za-z ]+$/g)
+    ) {
+      req_valid = false;
+    }
+  }
+  if (!req_valid) {
+    response.status(400);
+    response.json({ message: "Invalid Chores Roster" });
+  } else {
+    const new_chores = chores.updateRoster(request.body);
+    response.json({
+      message: "Chores updated.",
+      chores: new_chores,
+      location: "/chores",
+    });
+  }
 });
 
 app.get("/rotate", (request, response) => {
-  rotateRoster();
+  chores.rotateRoster();
   response.redirect("/");
 });
 
 app.get("/wheel", (request, response) => {
   response.render(
     "wheel",
-    createWheel(wheel_params.circles, wheel_params.segments)
+    wheel.createWheel(wheel_params.circles, wheel_params.segments)
   );
 });
 
@@ -83,5 +133,5 @@ app.use((err, request, response, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Listening at http://192.168.1.100:${port}`);
-}).ad;
+  console.log(`Listening on port ${port}`);
+});

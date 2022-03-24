@@ -68,4 +68,4 @@ const onClickButton = () => {
   createSvg(circles, sections);
 };
 
-export { createWheel };
+export default { createWheel };

@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  karen:
+    image: zebbarry/karen:arm-latest
+    restart: always
+    container_name: karen
+    ports:
+      - 80:8080
+    volumes:
+      - ./app/access.log:/app/access.log

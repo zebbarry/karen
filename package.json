@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "build": "docker build -t zebbarry/karen:arm-latest .",
-    "run": "docker run -p 18080:8080 -d zebbarry/karen:arm-latest"
+    "deploy": "docker run -p 18080:8080 -d zebbarry/karen:arm-latest"
   },
   "author": "Zeb Barry",
   "license": "ISC",

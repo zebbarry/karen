@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 const roster = [
   { calendar: "Monday", person: "Zeb" },
   { calendar: "Tuesday", person: "Emma" },
@@ -6,8 +8,7 @@ const roster = [
   { calendar: "Friday", person: "Morgan" },
 ];
 
-const date = new Date();
-const weekday = [
+const weekdays = [
   "Sunday",
   "Monday",
   "Tuesday",
@@ -18,13 +19,13 @@ const weekday = [
 ];
 
 const getCurrentPosition = () => {
-  return date.getDay();
+  return DateTime.now().setZone("Pacific/Auckland").weekday;
 };
 
 const getRoster = () => {
   let current = getCurrentPosition();
   roster.forEach((element) => {
-    element.current = element.calendar === weekday[current];
+    element.current = element.calendar === weekdays[current];
   });
   return {
     type: "Weekday",

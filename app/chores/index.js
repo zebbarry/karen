@@ -41,6 +41,7 @@ const compileChores = (chores_pairs) => {
   return chores;
 };
 
+const cancel_button = document.getElementById("cancel");
 const edit_button = document.getElementById("edit");
 const save_button = document.getElementById("save");
 const modify_cells = document.getElementsByClassName("modify-chore");
@@ -50,16 +51,21 @@ const chore_pairs = chores_table.getElementsByClassName("chore-pair");
 
 [...chore_pairs].forEach(addMoveCallbacks);
 
-const setModifyState = (enabled) => {
-  edit_button.disabled = enabled;
-  save_button.disabled = !enabled;
+const setModifyState = (modify_enabled) => {
+  cancel_button.hidden = !modify_enabled;
+  edit_button.hidden = modify_enabled;
+  save_button.disabled = !modify_enabled;
   for (const cell of modify_cells) {
-    cell.hidden = !enabled;
+    cell.hidden = !modify_enabled;
   }
 };
 
 edit_button.addEventListener("click", () => {
   setModifyState(true);
+});
+
+cancel_button.addEventListener("click", () => {
+  window.location.href = "/";
 });
 
 save_button.addEventListener("click", () => {

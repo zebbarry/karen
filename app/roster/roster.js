@@ -1,8 +1,8 @@
 const roster = [
   { calendar: "Monday", person: "Zeb" },
   { calendar: "Tuesday", person: "Emma" },
-  { calendar: "Wednesday", person: "Komal" },
-  { calendar: "Thursday", person: "Reece" },
+  { calendar: "Wednesday", person: "Reece" },
+  { calendar: "Thursday", person: "Komal" },
   { calendar: "Friday", person: "Morgan" },
 ];
 
@@ -27,7 +27,7 @@ const getRoster = () => {
     element.current = element.calendar === weekday[current];
   });
   return {
-    type: "Chore",
+    type: "Weekday",
     items: roster,
   };
 };

@@ -1,16 +1,12 @@
-const calcNewIndex = (current, direction, min, max) => {
-  const new_index = current + direction;
-  if (new_index > max) {
-    return min;
+const calcNewIndex = (current, shift, range) => {
+  if (shift < 0) {
+    shift = range - shift - 1;
   }
-  if (new_index < min) {
-    return max;
-  }
-  return new_index;
+  return (current + shift) % (range + 1);
 };
 
 const moveCellContent = (cells, current_index, direction) => {
-  const new_index = calcNewIndex(current_index, direction, 0, cells.length - 1);
+  const new_index = calcNewIndex(current_index, direction, cells.length - 1);
   const current_cell = cells[current_index].getElementsByClassName("chore")[0];
   const new_cell = cells[new_index].getElementsByClassName("chore")[0];
   // Swap text content

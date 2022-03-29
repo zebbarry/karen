@@ -1,0 +1,10 @@
+{
+  "chores": [
+    { "chore": "Bins", "person": "Komal" },
+    { "chore": "Vacuum", "person": "Emma" },
+    { "chore": "Kitchen", "person": "Morgan" },
+    { "chore": "Lounge", "person": "Zeb" },
+    { "chore": "Mop", "person": "Reece" }
+  ],
+  "date": "2022-03-21"
+}

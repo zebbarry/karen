@@ -1,10 +1,9 @@
-const chores = [
-  { chore: "Bins", person: "Komal" },
-  { chore: "Vacuum", person: "Emma" },
-  { chore: "Kitchen", person: "Morgan" },
-  { chore: "Lounge", person: "Zeb" },
-  { chore: "Mop", person: "Reece" },
-];
+import { DateTime } from "luxon";
+import fs from "fs";
+const initial_roster = JSON.parse(
+  fs.readFileSync("app/chores/initial_assignments.json").toString()
+);
+const chores = initial_roster.chores;
 
 const getRoster = () => {
   return {
@@ -33,5 +32,17 @@ const updateRoster = (new_chores) => {
   console.log(chores);
   return chores;
 };
+
+const initial_date = DateTime.fromISO(initial_roster.date, {
+  zone: "Pacific/Auckland",
+});
+const current_date = DateTime.now().setZone("Pacific/Auckland");
+const weeks_since_init = Math.floor(
+  current_date.diff(initial_date, ["weeks"]).weeks
+);
+console.log(`Shifting initial chore assignments ${weeks_since_init} weeks`);
+for (let i = 0; i < weeks_since_init; i++) {
+  rotateRoster();
+}
 
 export default { getRoster, rotateRoster, updateRoster };

@@ -10,10 +10,10 @@ import wheel from "./wheel/wheel.js";
 
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
-console.log(__dirname);
 
 const app = express();
 const port = 8080;
+chores.initRoster();
 
 const wheel_params = {
   segments: 5,
@@ -117,6 +117,7 @@ app.put("/update-chores", (request, response) => {
 app.get("/rotate", (request, response) => {
   console.log(`Chores rotated by ${request.hostname}`);
   chores.rotateRoster(1);
+  response.redirect("/");
 });
 
 app.get("/wheel", (request, response) => {

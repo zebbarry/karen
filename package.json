@@ -9,7 +9,7 @@
     "start": "node index.js",
     "build": "docker build -t zebbarry/karen:arm-latest .",
     "dev": "docker run -p 18080:8080 -d zebbarry/karen:arm-latest",
-    "update": "npm run build; docker-compose up -d"
+    "deploy": "npm run build; docker-compose up -d"
   },
   "author": "Zeb Barry",
   "license": "ISC",

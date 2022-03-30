@@ -116,7 +116,7 @@ app.put("/update-chores", (request, response) => {
 
 app.get("/rotate", (request, response) => {
   console.log(`Chores rotated by ${request.hostname}`);
-  chores.rotateRoster();
+  chores.rotateRoster(1);
 });
 
 app.get("/wheel", (request, response) => {

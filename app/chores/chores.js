@@ -12,15 +12,18 @@ const getRoster = () => {
   };
 };
 
-const rotateRoster = () => {
-  let prev_chore = chores[chores.length - 1].chore;
-  let curr_chore;
-  for (const chore_assignment of chores) {
-    curr_chore = chore_assignment.chore;
-    chore_assignment.chore = prev_chore;
-    prev_chore = curr_chore;
+const rotateRoster = (rotations) => {
+  for (let i = 0; i < rotations; i++) {
+    let prev_chore = chores[chores.length - 1].chore;
+    let curr_chore;
+    for (const chore_assignment of chores) {
+      curr_chore = chore_assignment.chore;
+      chore_assignment.chore = prev_chore;
+      prev_chore = curr_chore;
+    }
   }
-  console.log("Rotated roster:");
+
+  console.log(`Rotated roster ${rotations} times:`);
   console.log(chores);
 };
 
@@ -41,8 +44,6 @@ const weeks_since_init = Math.floor(
   current_date.diff(initial_date, ["weeks"]).weeks
 );
 console.log(`Shifting initial chore assignments ${weeks_since_init} weeks`);
-for (let i = 0; i < weeks_since_init; i++) {
-  rotateRoster();
-}
+rotateRoster(weeks_since_init);
 
 export default { getRoster, rotateRoster, updateRoster };

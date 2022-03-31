@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = 8080;
-chores.initRoster();
+chores.initRoster("app/chores/config.json");
 
 const wheel_params = {
   segments: 5,

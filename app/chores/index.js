@@ -27,14 +27,14 @@ const addMoveCallbacks = (row, index) => {
   });
 };
 
-const compileChores = (chores_pairs) => {
-  let chores = {};
+const compileAssignments = (chores_pairs) => {
+  let assignments = {};
   for (const pair of chores_pairs) {
     const chore = pair.getElementsByClassName("chore")[0];
     const person = pair.getElementsByClassName("person")[0];
-    chores[chore.textContent] = person.textContent;
+    assignments[person.textContent] = chore.textContent;
   }
-  return chores;
+  return assignments;
 };
 
 const cancel_button = document.getElementById("cancel");
@@ -69,5 +69,5 @@ save_button.addEventListener("click", () => {
   const xhr = new XMLHttpRequest();
   xhr.open("PUT", "/update-chores", true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send(JSON.stringify(compileChores(chore_pairs)));
+  xhr.send(JSON.stringify(compileAssignments(chore_pairs)));
 });

@@ -1,0 +1,40 @@
+{
+  "initial_roster": {
+    "chores": {
+      "Komal": "Bins",
+      "Emma": "Vacuum",
+      "Morgan": "Kitchen",
+      "Zeb": "Lounge",
+      "Reece": "Mop"
+    },
+    "date": "2022-03-21"
+  },
+  "contacts": {
+    "Komal": "+6402108760482",
+    "Emma": "+6402108760482",
+    "Morgan": "+6402108760482",
+    "Zeb": "+6402108760482",
+    "Reece": "+6402108760482"
+  },
+  "warnings": [
+    {
+      "chore": "Bins",
+      "day": {
+        "weekday": 3,
+        "hour": 20,
+        "minute": 30,
+        "second": 0,
+        "millisecond": 0
+      },
+      "message": "Surely we don't forget again"
+    }
+  ],
+  "timezone": "Pacific/Auckland",
+  "week_start": {
+    "weekday": 1,
+    "hour": 0,
+    "minute": 0,
+    "second": 0,
+    "millisecond": 0
+  }
+}

@@ -1,15 +1,7 @@
-import { DateTime } from "luxon";
+import { DateTime, Info } from "luxon";
 import fs from "fs";
 
 const chores = [];
-const desired_server_timezone = "Pacific/Auckland";
-const week_start_date = 1; // MONDAY
-
-const initial_roster = JSON.parse(
-  fs.readFileSync("app/chores/initial_assignments.json").toString()
-);
-console.log(`Loaded initial assignments from ${initial_roster.date}`);
-console.log(initial_roster.chores);
 
 const getRoster = () => {
   return {
@@ -33,51 +25,112 @@ const rotateRoster = (rotations) => {
   console.log(chores);
 };
 
-const updateRoster = (new_chores) => {
+const updateRoster = (new_assignments) => {
   chores.length = 0;
-  for (const chore in new_chores) {
-    chores.push({ chore: chore, person: new_chores[chore] });
+  for (const person in new_assignments) {
+    chores.push({ chore: new_assignments[person], person: person });
   }
   console.log(chores);
   return chores;
 };
 
-const calcWeeksSinceStart = (start_date, current_date) => {
-  return Math.floor(current_date.diff(start_date, ["weeks"]).weeks);
-};
-
-const rotateRosterToCurrentDate = (current_date) => {
-  const initial_date = DateTime.fromISO(initial_roster.date, {
-    zone: desired_server_timezone,
-  });
-  const weeks_since_init = calcWeeksSinceStart(initial_date, current_date);
+const rotateRosterToCurrentDate = (current_date, initial_date) => {
+  const weeks_since_init = Math.floor(
+    current_date.diff(initial_date, ["weeks"]).weeks
+  );
   console.log(`Shifting initial chore assignments ${weeks_since_init} weeks`);
   rotateRoster(weeks_since_init);
 };
 
-const calcMSecTillNextWeek = (current_date, week_start_date) => {
-  const start_of_next_week = current_date
-    .plus({ weeks: 1 })
-    .set({ weekday: week_start_date, hour: 0, minute: 0, second: 0 });
-  return start_of_next_week.diff(current_date, ["milliseconds"]).milliseconds;
+const calcMSecTillNextOccurrence = (current_date, day_config) => {
+  let next_occurrence = current_date.set(day_config);
+  // Has already occurred
+  if (current_date > next_occurrence) {
+    next_occurrence = next_occurrence.plus({ weeks: 1 });
+  }
+  return next_occurrence.toMillis() - current_date.toMillis();
 };
 
-const initRoster = () => {
-  const current_date = DateTime.now().setZone(desired_server_timezone);
-  console.log("Resetting roster");
-  updateRoster(initial_roster.chores);
+const weeklyRotation = (initial_roster, week_start, timezone) => {
+  (function loop() {
+    const current_date = DateTime.now().setZone(timezone);
+    updateRoster(initial_roster.chores);
+    rotateRosterToCurrentDate(current_date, initial_roster.date);
 
-  rotateRosterToCurrentDate(current_date);
+    // Reinit at start of next week
+    const msec_till_next_week = calcMSecTillNextOccurrence(
+      current_date,
+      week_start
+    );
+    setInterval(() => {
+      console.log("It's the start of a new week! Reinitialising roster...");
+      loop();
+    }, msec_till_next_week);
+  })();
+};
 
-  // Reinit at start of next week
-  const msec_till_next_week = calcMSecTillNextWeek(
-    current_date,
-    week_start_date
+const addChoreWarning = (chore, day_config, timezone, callback) => {
+  (function loop() {
+    const current_date = DateTime.now().setZone(timezone);
+    const msec_till_warning = calcMSecTillNextOccurrence(
+      current_date,
+      day_config
+    );
+
+    // Wait till next occurrence
+    setTimeout(() => {
+      const assignments = chores.filter(
+        (assignment) => assignment.chore === chore
+      );
+      callback(assignments);
+      loop();
+    }, msec_till_warning);
+  })();
+};
+
+const initRoster = (config_file) => {
+  // Load config file
+  const config = JSON.parse(fs.readFileSync(config_file).toString());
+  config.initial_roster.date = DateTime.fromISO(config.initial_roster.date, {
+    zone: config.timezone,
+  });
+  console.log(
+    `Loaded initial assignments from ${config.initial_roster.date.toLocaleString(
+      DateTime.DATETIME_MED
+    )}`
   );
-  setInterval(() => {
-    console.log("It's the start of a new week! Reinitialising roster...");
-    initRoster();
-  }, msec_till_next_week);
+  console.log(config.initial_roster.chores);
+
+  // Setup weekly rotation
+  const week_start_day = DateTime.fromObject(config.week_start);
+  console.log(
+    `Start of week configured for ${
+      Info.weekdays()[week_start_day.weekday - 1]
+    }s at ${week_start_day.toLocaleString(DateTime.TIME_WITH_SECONDS)}`
+  );
+  weeklyRotation(config.initial_roster, config.week_start, config.timezone);
+
+  // Add warnings
+  config.warnings.forEach((warning) => {
+    const date = DateTime.fromObject(warning.day);
+    console.log(
+      `Adding warning for ${warning.chore} on ${
+        Info.weekdays()[date.weekday - 1]
+      }s at ${date.toLocaleString(DateTime.TIME_WITH_SECONDS)}`
+    );
+    addChoreWarning(
+      warning.chore,
+      warning.day,
+      config.timezone,
+      function callback(assignments) {
+        assignments.forEach((assignment) => {
+          console.log(
+            `${assignment.person} is assigned to ${assignment.chore}: ${warning.message}`
+          );
+        });
+      }
+    );
+  });
 };
 
 export default { initRoster, getRoster, rotateRoster, updateRoster };

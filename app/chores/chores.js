@@ -69,22 +69,22 @@ const weeklyRotation = (initial_roster, week_start, timezone) => {
   })();
 };
 
-const addChoreWarning = (chore, day_config, timezone, callback) => {
+const addChoreAction = (action, timezone, contact_details) => {
   (function loop() {
     const current_date = DateTime.now().setZone(timezone);
-    const msec_till_warning = calcMSecTillNextOccurrence(
+    const msec_till_action = calcMSecTillNextOccurrence(
       current_date,
-      day_config
+      action.day
     );
 
     // Wait till next occurrence
     setTimeout(() => {
       const assignments = chores.filter(
-        (assignment) => assignment.chore === chore
+        (assignment) => assignment.chore === action.chore
       );
-      callback(assignments);
+      action.callback(assignments, action.meta, contact_details);
       loop();
-    }, msec_till_warning);
+    }, msec_till_action);
   })();
 };
 
@@ -110,26 +110,18 @@ const initRoster = (config_file) => {
   );
   weeklyRotation(config.initial_roster, config.week_start, config.timezone);
 
-  // Add warnings
-  config.warnings.forEach((warning) => {
-    const date = DateTime.fromObject(warning.day);
+  // Add actions
+  config.actions.forEach((action) => {
+    const date = DateTime.fromObject(action.day);
     console.log(
-      `Adding warning for ${warning.chore} on ${
+      `Adding action for ${action.chore} on ${
         Info.weekdays()[date.weekday - 1]
       }s at ${date.toLocaleString(DateTime.TIME_WITH_SECONDS)}`
     );
-    addChoreWarning(
-      warning.chore,
-      warning.day,
-      config.timezone,
-      function callback(assignments) {
-        assignments.forEach((assignment) => {
-          console.log(
-            `${assignment.person} is assigned to ${assignment.chore}: ${warning.message}`
-          );
-        });
-      }
-    );
+    import(action.callback).then((callback) => {
+      action.callback = callback.default;
+      addChoreAction(action, config.timezone, config.details);
+    });
   });
 };
 

@@ -9,24 +9,42 @@
     },
     "date": "2022-03-21"
   },
-  "contacts": {
-    "Komal": "+6402108760482",
-    "Emma": "+6402108760482",
-    "Morgan": "+6402108760482",
-    "Zeb": "+6402108760482",
-    "Reece": "+6402108760482"
+  "details": {
+    "Komal": {
+      "mobile": "+12345678910",
+      "email": "test@gmail.com"
+    },
+    "Emma": {
+      "mobile": "+12345678910",
+      "email": "test@gmail.com"
+    },
+    "Morgan": {
+      "mobile": "+12345678910",
+      "email": "test@gmail.com"
+    },
+    "Zeb": {
+      "mobile": "+12345678910",
+      "email": "test@gmail.com"
+    },
+    "Reece": {
+      "mobile": "+12345678910",
+      "email": "test@gmail.com"
+    }
   },
-  "warnings": [
+  "actions": [
     {
       "chore": "Bins",
       "day": {
-        "weekday": 3,
-        "hour": 20,
-        "minute": 30,
+        "weekday": 5,
+        "hour": 18,
+        "minute": 54,
         "second": 0,
         "millisecond": 0
       },
-      "message": "Surely we don't forget again"
+      "callback": "./callbacks/console.js",
+      "meta": {
+        "message": "Surely we don't forget again!"
+      }
     }
   ],
   "timezone": "Pacific/Auckland",
